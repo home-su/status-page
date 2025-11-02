@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const axios = require('axios');
-const cheerio = require('cheerio');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,13 +21,10 @@ app.get("/api/v1/proxy", async (req, res) => {
         message: "Masukan url website!"
     })
     try {
-        const response = await axios.get("https://api.vreden.my.id/api/v1/tools/proxy?region=us3&url=" + encodeURIComponent(req.query.url))
-        const $ = cheerio.load(response.data.result.content);
-        const body = $('body').text();
-        const result = JSON.parse(body);
+        const response = await axios.get(req.query.url)
         return res.json({
             success: true,
-            data: result
+            data: response.data
         })
     } catch (error) {
         console.error(error)
